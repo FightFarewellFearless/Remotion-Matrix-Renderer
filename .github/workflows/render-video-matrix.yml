@@ -37,7 +37,7 @@ jobs:
   cache-dependencies:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -163,7 +163,7 @@ jobs:
       - name: Render muted video
         run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@main
         with:
           name: workflow_output
           path: ./workflow_output
@@ -172,7 +172,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [render-videos]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
       - uses: Wandalen/wretry.action@master
         with:
           action: actions/download-artifact@v3
