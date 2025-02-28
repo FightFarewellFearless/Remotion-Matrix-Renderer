@@ -31,10 +31,14 @@ on:
         required: true
         type: string
         default: Main
+      props:
+        required: true
+        type: string
 env:
   REMOTION_ENTRY_POINT: ${{inputs.remotion_entry_point}}
   REMOTION_COMPOSITION_ID: ${{inputs.remotion_composition_id}}
   NUM_OF_WORKERS: ${{inputs.num_of_workers}}
+  PROPS: ${{inputs.props}}
 
 jobs:
   cache-dependencies:
@@ -87,10 +91,10 @@ jobs:
 
       - run: echo $WORKFLOW_INPUT > input-props.json
         env:
-          WORKFLOW_INPUT: ${{ inputs.props }}
+          WORKFLOW_INPUT: ${{ env.PROPS }}
       - id: get-total-frames
         run: |
-          output=$(npx remotion compositions ${{env.REMOTION_ENTRY_POINT}}) --props=./input-props.json
+          output=$(npx remotion compositions ${{env.REMOTION_ENTRY_POINT}} --props=./input-props.json)
           value=$(echo "$output" | awk -v id="${{env.REMOTION_COMPOSITION_ID}}" '$1==id {print $4}' | tail -n 1)
           echo "total_frames=$value" >> $GITHUB_OUTPUT
     outputs:
@@ -119,9 +123,11 @@ jobs:
 
       - run: echo $WORKFLOW_INPUT > input-props.json
         env:
-          WORKFLOW_INPUT: ${{ inputs.props }}
+          WORKFLOW_INPUT: ${{ env.PROPS }}
       - id: render-audio
         run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/audio.mp3 --props=./input-props.json
+      - id: render-thumbnail
+        run: npx remotion still ${{env.REMOTION_ENTRY_POINT}} MusicThumbnail workflow_output/thumbnail.png --props=./input-props.json
 
       - uses: actions/upload-artifact@main
         with:
@@ -171,7 +177,7 @@ jobs:
 
       - run: echo $WORKFLOW_INPUT > input-props.json
         env:
-          WORKFLOW_INPUT: ${{ inputs.props }}
+          WORKFLOW_INPUT: ${{ env.PROPS }}
       - name: Render muted video
         run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted --props=./input-props.json
 
@@ -209,4 +215,6 @@ jobs:
       - uses: actions/upload-artifact@main
         with:
           name: video
-          path: ./video.mp4
+          path: |
+            ./video.mp4
+            ./workflow_output/thumbnail.png
