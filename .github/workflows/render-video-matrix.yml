@@ -3,6 +3,10 @@ run-name: Render video using ${{inputs.num_of_workers}} workers
 on:
   workflow_call:
     inputs:
+      scale:
+        required: true
+        type: number
+        default: 1
       num_of_workers:
         required: true
         type: number
@@ -18,6 +22,10 @@ on:
 
   workflow_dispatch:
     inputs:
+      scale:
+        required: true
+        type: number
+        default: 1
       num_of_workers:
         description: "How many workers to use?"
         required: true
@@ -39,6 +47,7 @@ env:
   REMOTION_COMPOSITION_ID: ${{inputs.remotion_composition_id}}
   NUM_OF_WORKERS: ${{inputs.num_of_workers}}
   PROPS: ${{inputs.props}}
+  SCALE: ${{inputs.scale}}
 
 jobs:
   cache-dependencies:
@@ -94,7 +103,7 @@ jobs:
           WORKFLOW_INPUT: ${{ env.PROPS }}
       - id: get-total-frames
         run: |
-          output=$(npx remotion compositions ${{env.REMOTION_ENTRY_POINT}} --props=./input-props.json)
+          output=$(npx remotion compositions ${{env.REMOTION_ENTRY_POINT}} --props=./input-props.json --scale=${{env.SCALE}})
           value=$(echo "$output" | awk -v id="${{env.REMOTION_COMPOSITION_ID}}" '$1==id {print $4}' | tail -n 1)
           echo "total_frames=$value" >> $GITHUB_OUTPUT
     outputs:
@@ -125,7 +134,7 @@ jobs:
         env:
           WORKFLOW_INPUT: ${{ env.PROPS }}
       - id: render-audio
-        run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/audio.mp3 --props=./input-props.json
+        run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/audio.mp3 --props=./input-props.json --scale=${{env.SCALE}}
       - id: render-thumbnail
         run: npx remotion still ${{env.REMOTION_ENTRY_POINT}} MusicThumbnail workflow_output/thumbnail.png --props=./input-props.json --scale=0.5
 
@@ -179,7 +188,7 @@ jobs:
         env:
           WORKFLOW_INPUT: ${{ env.PROPS }}
       - name: Render muted video
-        run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted --props=./input-props.json
+        run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted --props=./input-props.json --scale=${{env.SCALE}}
 
       - uses: actions/upload-artifact@main
         with:
