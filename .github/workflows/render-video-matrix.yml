@@ -5,8 +5,8 @@ on:
     inputs:
       scale:
         required: true
-        type: number
-        default: 1
+        type: string
+        default: "1"
       num_of_workers:
         required: true
         type: number
@@ -24,8 +24,8 @@ on:
     inputs:
       scale:
         required: true
-        type: number
-        default: 1
+        type: string
+        default: "1"
       num_of_workers:
         description: "How many workers to use?"
         required: true
