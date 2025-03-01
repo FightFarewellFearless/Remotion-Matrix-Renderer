@@ -233,6 +233,7 @@ jobs:
         with:
           name: ${{ env.IDENTIFIER }}
           body: ${{ env.PROPS }}
+          tag_name: ${{ env.IDENTIFIER }}
           files: |
             video.mp4
             workflow_output/thumbnail.png
