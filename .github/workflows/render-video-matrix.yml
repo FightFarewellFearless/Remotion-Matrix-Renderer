@@ -234,6 +234,7 @@ jobs:
           name: ${{ env.IDENTIFIER }}
           body: ${{ env.PROPS }}
           tag_name: ${{ env.IDENTIFIER }}
+          token: ${{ secrets.TOKEN }}
           files: |
             video.mp4
             workflow_output/thumbnail.png
