@@ -57,7 +57,7 @@ env:
   IDENTIFIER: ${{inputs.id}}
 
 jobs:
-  cache-dependencies:
+  menyiapkan-cache-dependencies:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
@@ -74,7 +74,7 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-  build-matrix:
+  mempersiapkan-server-matrix:
     runs-on: ubuntu-latest
     steps:
       - id: set-matrix
@@ -85,7 +85,7 @@ jobs:
     outputs:
       workers_matrix: ${{ steps.set-matrix.outputs.workers_matrix }}
 
-  retrieve-total-frames:
+  menghitung-total-frames:
     runs-on: ubuntu-latest
     needs: [cache-dependencies]
     steps:
@@ -116,7 +116,7 @@ jobs:
     outputs:
       total_frames: ${{ steps.get-total-frames.outputs.total_frames }}
 
-  render-audio:
+  merender-audio:
     runs-on: ubuntu-latest
     needs: [cache-dependencies]
     steps:
@@ -150,7 +150,7 @@ jobs:
           name: workflow_output-audio
           path: ./workflow_output
 
-  render-videos:
+  merender-videos:
     runs-on: ubuntu-latest
     needs: [build-matrix, cache-dependencies, retrieve-total-frames]
     env:
@@ -202,7 +202,7 @@ jobs:
           name: workflow_output-${{matrix.worker_id}}
           path: ./workflow_output
 
-  merge-videos:
+  menggabungkan-video:
     runs-on: ubuntu-latest
     needs: [render-videos]
     steps:
