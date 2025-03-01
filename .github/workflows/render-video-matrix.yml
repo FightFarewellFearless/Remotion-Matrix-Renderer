@@ -19,6 +19,9 @@ on:
       props:
         required: true
         type: string
+      id:
+        required: true
+        type: string
 
   workflow_dispatch:
     inputs:
@@ -42,12 +45,16 @@ on:
       props:
         required: true
         type: string
+      id: 
+        required: true
+        type: string
 env:
   REMOTION_ENTRY_POINT: ${{inputs.remotion_entry_point}}
   REMOTION_COMPOSITION_ID: ${{inputs.remotion_composition_id}}
   NUM_OF_WORKERS: ${{inputs.num_of_workers}}
   PROPS: ${{inputs.props}}
   SCALE: ${{inputs.scale}}
+  IDENTIFIER: ${{inputs.id}}
 
 jobs:
   cache-dependencies:
@@ -220,6 +227,15 @@ jobs:
       - uses: geekyeggo/delete-artifact@v2
         with:
           name: workflow_output
+      
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.IDENTIFIER }}
+          body: ${{ env.PROPS }}
+          files: |
+            video.mp4
+            workflow_output/thumbnail.png
 
       - uses: actions/upload-artifact@main
         with:
