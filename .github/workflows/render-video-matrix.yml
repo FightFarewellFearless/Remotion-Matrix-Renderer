@@ -204,7 +204,7 @@ jobs:
 
   menggabungkan-video:
     runs-on: ubuntu-latest
-    needs: [merender-videos]
+    needs: [merender-videos, merender-audio]
     steps:
       - uses: actions/checkout@main
       - uses: Wandalen/wretry.action@master
