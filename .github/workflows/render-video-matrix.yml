@@ -224,9 +224,9 @@ jobs:
       - name: merge all mp4 and mp3 files
         run: ffmpeg -f concat -i "list.txt" -i workflow_output/audio.mp3 -c copy video.mp4
 
-      - uses: geekyeggo/delete-artifact@v2
+      - uses: geekyeggo/delete-artifact@v5
         with:
-          name: workflow_output
+          name: workflow_output*
       
       - name: Release
         uses: softprops/action-gh-release@v2
