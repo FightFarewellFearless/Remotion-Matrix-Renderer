@@ -141,7 +141,7 @@ jobs:
         env:
           WORKFLOW_INPUT: ${{ env.PROPS }}
       - id: render-audio
-        run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/audio.mp3 --props=./input-props.json --scale=${{env.SCALE}}
+        run: REMOTION_USE_LOCAL_DIR=yes npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/audio.mp3 --props=./input-props.json --scale=${{env.SCALE}}
       - id: render-thumbnail
         run: npx remotion still ${{env.REMOTION_ENTRY_POINT}} MusicThumbnail workflow_output/thumbnail.png --props=./input-props.json --scale=0.5
 
@@ -195,7 +195,7 @@ jobs:
         env:
           WORKFLOW_INPUT: ${{ env.PROPS }}
       - name: Render muted video
-        run: npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted --props=./input-props.json --scale=${{env.SCALE}}
+        run: REMOTION_USE_LOCAL_DIR=yes npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted --props=./input-props.json --scale=${{env.SCALE}}
 
       - uses: actions/upload-artifact@main
         with:
