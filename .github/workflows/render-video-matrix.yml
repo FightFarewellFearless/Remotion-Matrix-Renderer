@@ -140,6 +140,9 @@ jobs:
       - run: echo $WORKFLOW_INPUT > input-props.json
         env:
           WORKFLOW_INPUT: ${{ env.PROPS }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: audioDownload
       - id: render-audio
         run: REMOTION_USE_LOCAL_DIR=yes npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/audio.mp3 --props=./input-props.json --scale=${{env.SCALE}}
       - id: render-thumbnail
@@ -194,6 +197,9 @@ jobs:
       - run: echo $WORKFLOW_INPUT > input-props.json
         env:
           WORKFLOW_INPUT: ${{ env.PROPS }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: audioDownload
       - name: Render muted video
         run: REMOTION_USE_LOCAL_DIR=yes npx remotion render ${{env.REMOTION_ENTRY_POINT}} ${{env.REMOTION_COMPOSITION_ID}} workflow_output/${{matrix.worker_id}}.mp4 --frames=${{env.START_FRAME}}-${{env.END_FRAME}} --muted --props=./input-props.json --scale=${{env.SCALE}}
 
